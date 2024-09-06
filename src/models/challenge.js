@@ -14,6 +14,10 @@ const challengeSchema = new Schema(
     challengeDescription: {
       type: String,
     },
+    level:{
+      type:String,
+      // required: true,
+    }
     // image: {
     //   type: String,
     // },
