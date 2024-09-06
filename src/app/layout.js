@@ -1,5 +1,14 @@
 import localFont from "next/font/local";
 import "./globals.css";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import { SvgIcon } from "@mui/material";
+import Image from "next/image";
+// import MenuIcon from '@mui/icons-material/Menu';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -21,6 +30,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <header>
+          <Box sx={{ flexGrow: 1 }}>
+            <AppBar sx={{ backgroundColor: 'white' }} position="static">
+              <Toolbar>
+                <Image src={'/media/appLogo.svg'} alt="company logo" height={60} width={100} />
+              </Toolbar>
+            </AppBar>
+          </Box>
+        </header>
         {children}
       </body>
     </html>
