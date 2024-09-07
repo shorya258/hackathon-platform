@@ -17,9 +17,9 @@ import Select from "@mui/material/Select";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
-
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 const ChallengeForm = () => {
-  const router= useRouter();
+  const router = useRouter();
   const [image, setImage] = useState(null);
 
   const [challengeDetails, setChallengeDetails] = useState({
@@ -27,7 +27,7 @@ const ChallengeForm = () => {
     startDate: null,
     endDate: null,
     challengeDescription: "",
-    level: "",
+    level: "Easy",
     image: "",
     status: "",
   });
@@ -64,16 +64,16 @@ const ChallengeForm = () => {
   };
 
   const createChallenge = async (challengeDetails) => {
-    const oldChallengeDetails= challengeDetails;
+    const oldChallengeDetails = challengeDetails;
     const start = new Date(challengeDetails.startDate);
     const end = new Date(challengeDetails.endDate);
     const now = new Date();
     if (now < start) {
-      oldChallengeDetails.status="upcoming";
+      oldChallengeDetails.status = "upcoming";
     } else if (now >= start && now <= end) {
-      oldChallengeDetails.status="active";
+      oldChallengeDetails.status = "active";
     } else if (now > end) {
-      oldChallengeDetails.status="past";
+      oldChallengeDetails.status = "past";
     }
     setChallengeDetails(oldChallengeDetails);
     const response = await fetch(`/api/create-challenge`, {
@@ -128,19 +128,16 @@ const ChallengeForm = () => {
   };
 
   return (
-    <Box
-      sx={{
-        my: 4,
-      }}
-    >
+    <Box sx={{}}>
       <ToastContainer />
       <Typography
         sx={{
           backgroundColor: "rgba(248, 249, 253, 1)",
           fontSize: "24px",
           fontWeight: "bold",
-          px: 8,
+          px: 10,
           py: 4,
+          mb: 4,
         }}
       >
         Challenge Details
@@ -148,14 +145,14 @@ const ChallengeForm = () => {
 
       <Box
         sx={{
-          width: "80%",
+          px: 10,
+          my: 4,
           display: "flex",
           flexDirection: "column",
-          m: "auto",
-          gap: { sm: 4, md: 8 },
+          gap: { sm: 4, md: 4 },
         }}
       >
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
           <FormLabel htmlFor="challenge-name" required>
             Challenge name
           </FormLabel>
@@ -167,16 +164,17 @@ const ChallengeForm = () => {
             size="small"
             value={challengeDetails.challengeName}
             onChange={onChange}
-            sx={{ width: "50%" }}
+            sx={{ width: "300px" }}
           />
         </Box>
         <Box
           sx={{
             display: "flex",
-            flexDirection: { sm: "column", md: "row", gap: 3 },
+            flexDirection: "column",
+            gap: 3,
           }}
         >
-          <Box sx={{}}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
             <FormLabel htmlFor="startDate" required>
               Start Date
             </FormLabel>
@@ -191,11 +189,12 @@ const ChallengeForm = () => {
                       : null
                   }
                   onChange={(newValue) => onDateChange("startDate", newValue)}
+                  sx={{ width: "300px" }}
                 />
               </DemoContainer>
             </LocalizationProvider>
           </Box>
-          <Box>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
             <FormLabel htmlFor="endDate" required>
               End Date
             </FormLabel>
@@ -210,51 +209,70 @@ const ChallengeForm = () => {
                       : null
                   }
                   onChange={(newValue) => onDateChange("endDate", newValue)}
+                  sx={{ width: "300px" }}
                 />
               </DemoContainer>
             </LocalizationProvider>
           </Box>
         </Box>
-        <Box>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
           <FormLabel htmlFor="challenge-description" required>
             Description
           </FormLabel>
           <TextField
             multiline
-            rows={4}
+            rows={6}
             variant="outlined"
-            fullWidth
+            sx={{ display: "block" }}
+            InputProps={{
+              sx: { width: "800px" }, // Set your desired width for the input element
+            }}
             name="challengeDescription"
             value={challengeDetails.challengeDescription}
             onChange={onChange}
             required
           />
         </Box>
-        <div>
-          {/* File Input using TextField */}
-          <TextField
-            type="file"
-            variant="outlined"
-            onChange={handleFileChange}
-            InputLabelProps={{
-              shrink: true,
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <FormLabel htmlFor="challenge-description" required>
+            Image
+          </FormLabel>
+          <Button
+            variant="contained"
+            component="label"
+            sx={{
+              color: "white",
+              backgroundColor: "grey",
+              "&:hover": {
+                backgroundColor: "cyan",
+              },
+              width : '200px'
             }}
+          >
+            Upload
+            <input
+              type="file"
+              hidden // Hides the actual file input
+              onChange={handleFileChange} // Handles file selection
+            />
+                      <CloudUploadIcon sx={{marginLeft : 1 , fontSize : "1rem"}}/>
+          </Button>
 
-            // onChange={onChange}
-          />
-          <label htmlFor="contained-button-file">
-            <Button variant="contained" component="span" onClick={handleUpload}>
-              Upload
-            </Button>
-          </label>
-        </div>
+        </Box>
 
         {/* level */}
-        <Box sx={{ minWidth: { sm: 50, md: "180px" } }}>
-          <FormControl>
-            <InputLabel id="demo-simple-select-label" required>
-              Level
-            </InputLabel>
+        <Box
+          sx={{
+            minWidth: { sm: 50, md: "180px" },
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          <FormLabel htmlFor="challenge-description" required>
+            Level Type
+          </FormLabel>
+          <FormControl sx={{ display: "block" }}>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
@@ -263,6 +281,7 @@ const ChallengeForm = () => {
               label="level"
               required
               onChange={onChange}
+              sx={{ width: "200px" }}
             >
               <MenuItem value={"Easy"}>Easy</MenuItem>
               <MenuItem value={"Medium"}>Medium</MenuItem>
@@ -276,9 +295,12 @@ const ChallengeForm = () => {
             color: "white",
             backgroundColor: " rgba(68, 146, 76, 1)",
             display: "inline",
-            width: "300px",
-            p: 2,
-            fontSize: "18px",
+            width: "200px",
+            px: 2,
+            py: 1,
+            fontSize: "14px",
+            mt: 4,
+            borderRadius: 3,
           }}
         >
           Create Challenge
