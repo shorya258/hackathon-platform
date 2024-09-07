@@ -1,12 +1,66 @@
 "use client";
-import { Box, Button, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import { Search } from "@mui/icons-material";
 import ChallengeCard from "./ChallengeCard";
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Checkbox,
+  FormControlLabel,
+  Box,
+  Button,
+  Typography,
+  Divider,
+  FormGroup,
+  Popover,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const ExploreChallenges = () => {
   const [challenges, setChallenges] = useState([]);
+  const [statusFilters, setStatusFilters] = useState([]);
+  const [levelFilters, setLevelFilters] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
+  // Status options
+  const statusOptions = ['All', 'Active', 'Upcoming', 'Past'];
+  // Level options
+  const levelOptions = ["Easy", "Medium", "Hard"];
+
+  // Handle change for Status filters
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "filter-popover" : undefined;
+
+  // Handle change for Status filters
+  const handleStatusChange = (event) => {
+    const value = event.target.name;
+    setStatusFilters((prev) =>
+      prev.includes(value)
+        ? prev.filter((item) => item !== value)
+        : [...prev, value]
+    );
+  };
+
+  // Handle change for Level filters
+  const handleLevelChange = (event) => {
+    const value = event.target.name;
+    setLevelFilters((prev) =>
+      prev.includes(value)
+        ? prev.filter((item) => item !== value)
+        : [...prev, value]
+    );
+  };
+
   const challengeDetails = {
     challengeName: "Data Sprint 72 - Butterfly Identification",
     challengeImg: "/media/challenge-card.svg",
@@ -61,6 +115,7 @@ const ExploreChallenges = () => {
           color: "white",
           width: "100%",
           p: 4,
+          zIndex: 0,
         }}
       >
         <Typography
@@ -76,10 +131,17 @@ const ExploreChallenges = () => {
         <Box
           sx={{
             display: "flex",
-            flexDirection: "row",
+            flexDirection: "column",
             justifyContent: "center",
           }}
         >
+          <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+          >
           <Box
             sx={{
               backgroundColor: "white",
@@ -104,10 +166,89 @@ const ExploreChallenges = () => {
           </Box>
 
           <Box>
-            <Button sx={{ backgroundColor: "white", color: "black" }}>
+            {/* Button to trigger the dropdown */}
+            <Button sx={{ backgroundColor:"white", color:"black", mx:4, px:4  }}  onClick={handleClick}>
               Filter
             </Button>
+
+            {/* Popover that acts like a dropdown modal */}
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+            >
+              <div style={{ padding: "20px", width: "250px" }}>
+                <Typography>Status</Typography>
+                <FormGroup>
+                  {statusOptions.map((status) => (
+                    <FormControlLabel
+                      key={status}
+                      control={
+                        <Checkbox
+                          checked={statusFilters.includes(status)}
+                          onChange={handleStatusChange}
+                          name={status}
+                        />
+                      }
+                      label={status}
+                    />
+                  ))}
+                </FormGroup>
+
+                <Divider style={{ margin: "10px 0" }} />
+
+                <Typography>Level</Typography>
+                <FormGroup>
+                  {levelOptions.map((level) => (
+                    <FormControlLabel
+                      key={level}
+                      control={
+                        <Checkbox
+                          checked={levelFilters.includes(level)}
+                          onChange={handleLevelChange}
+                          name={level}
+                        />
+                      }
+                      label={level}
+                    />
+                  ))}
+                </FormGroup>
+              </div>
+            </Popover>
           </Box>
+          </Box>
+
+          <Box sx={{}} >
+            {statusFilters?.map((filterItem)=>{
+              {console.log(filterItem)}
+              return(
+              <Typography  sx={{borderRadius:1, backgroundColor:"rgba(248, 249, 253, 0.49)", color:"white", display:"inline", p:1, m:2, borderRadius:2 }} >
+                {filterItem}
+                <Image src={"/media/cross-icon.svg"} alt={"cross icon"} height={20} width={20} />
+              </Typography>
+              )
+            })}
+            {levelFilters?.map((filterItem)=>{
+              {console.log(filterItem)}
+              return(
+                <Typography  sx={{borderRadius:1, backgroundColor:"rgba(248, 249, 253, 0.49)", color:"white", display:"inline", p:1, m:2, borderRadius:2 }} >
+                {filterItem}
+                <Image src={"/media/cross-icon.svg"} alt={"cross icon"} height={20} width={20} />
+              </Typography>
+              )
+            })}
+            </Box>
+
+
         </Box>
       </Box>
 
@@ -140,7 +281,7 @@ const ExploreChallenges = () => {
             No challenges to display yet!
           </Box>
         ) : (
-        <>
+          <>
             {challenges?.map((singleChallengeDetails, key) => {
               // console.log(first)
               return (
@@ -150,8 +291,7 @@ const ExploreChallenges = () => {
                 />
               );
             })}
-        
-        </>
+          </>
         )}
       </Box>
     </Box>
