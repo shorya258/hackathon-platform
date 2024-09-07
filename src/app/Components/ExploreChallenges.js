@@ -16,43 +16,43 @@ const ExploreChallenges = () => {
     startDate: "2024-09-09",
     endDate: "2025-04-04",
   };
-  const getChallenges=async(status,level)=>{
+  const getChallenges = async (status, level) => {
     const response = await fetch(`/api/get-challenges`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        status:status,
-        level:level
+        status: status,
+        level: level,
       }),
     });
     const json = await response.json();
-    console.log(json);
+    console.log(json.challenges);
     const statusCode = response.status;
 
     //console.log(json.status);
     if (statusCode === 201) {
-      console.log("success")
-      // setChallenges(json.challenges)
+      console.log("success");
+      setChallenges(json.challenges);
     } else if (statusCode === 400) {
       toast.error(json.error);
     } else {
       toast.error("Failed to add the item!");
     }
-  }
+  };
 
   useEffect(() => {
-    getChallenges("All",null);
-  }, [])
-  
+    getChallenges("All", null);
+  }, []);
+
   return (
     <Box
       sx={{
         width: "100%",
       }}
     >
-      <ToastContainer/>
+      <ToastContainer />
       {/* explore challenges box */}
 
       <Box
@@ -128,31 +128,31 @@ const ExploreChallenges = () => {
           margin: "auto auto",
         }}
       >
-        {/* {
-            challenges.length===0?
-            <Box 
+        {challenges.length === 0 ? (
+          <Box
             sx={{
-                color:"white",
-                fontSize:"32px",
-                fontWeight:"bold",
-                textAlign:"center"
+              color: "white",
+              fontSize: "32px",
+              fontWeight: "bold",
+              textAlign: "center",
             }}
-            >
-                No challenges to display!
-            </Box>:
-            <Box>
-               {challenges.map((singleChallengeDetails, key)=>{
-                return (
-                    <ChallengeCard key={key} challengeDetails={singleChallengeDetails} />
-                )
-               })}
-            </Box>
-        } */}
-        <ChallengeCard challengeDetails={challengeDetails} />
-        <ChallengeCard challengeDetails={challengeDetails} />
-        <ChallengeCard challengeDetails={challengeDetails} />
-        <ChallengeCard challengeDetails={challengeDetails} />
-        <ChallengeCard challengeDetails={challengeDetails} />
+          >
+            No challenges to display yet!
+          </Box>
+        ) : (
+        <>
+            {challenges?.map((singleChallengeDetails, key) => {
+              // console.log(first)
+              return (
+                <ChallengeCard
+                  key={key}
+                  challengeDetails={singleChallengeDetails}
+                />
+              );
+            })}
+        
+        </>
+        )}
       </Box>
     </Box>
   );

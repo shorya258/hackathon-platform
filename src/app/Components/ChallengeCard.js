@@ -14,7 +14,7 @@ const ChallengeCard = ({ challengeDetails }) => {
     endDate,
     challengeDescription,
     level,
-    challengeImg,
+    image,
   } = challengeDetails;
   const [status, setStatus] = useState("");
   const [timeLeft, setTimeLeft] = useState({});
@@ -82,12 +82,12 @@ const ChallengeCard = ({ challengeDetails }) => {
 
   return (
     <div>
-      <Card sx={{ maxWidth: 345, m: 4, height: "auto", borderRadius: "14px" }}>
+      <Card sx={{ width: 345, m: 4, height: "auto", borderRadius: "14px" }}>
         <CardActionArea>
           <CardMedia
             component="img"
             height="140"
-            image={challengeImg}
+            image={image}
             alt="challenge img"
           />
           <CardContent

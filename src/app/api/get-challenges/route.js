@@ -5,7 +5,7 @@ export async function POST(req) {
   try {
     const body = await req.json();
     const { status, level } = body;
-    if (!status ) {
+    if (!status) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -13,9 +13,19 @@ export async function POST(req) {
     }
     await connectToDatabase();
     let challenges = {};
-    if(status==="All" && level === null ) challenges = await challenge.find({ status: status });
-    else if (status!=="All" && level === null) challenges = await challenge.find({ status: status });
-    else challenges = await challenge.find({ status: status, level: level });
+    if (status === "All") {
+      if (level === null) {
+        challenges = await challenge.find({});
+      } else {
+        challenges = await challenge.find({ level });
+      }
+    } else {
+      if (level === null) {
+        challenges = await challenge.find({ status });
+      } else {
+        challenges = await challenge.find({ level, status });
+      }
+    }
 
     if (!challenges) {
       return NextResponse.json(
