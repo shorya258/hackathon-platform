@@ -15,6 +15,7 @@ import {
   Divider,
   FormGroup,
   Popover,
+  PopoverPaper,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ToastContainer, toast } from "react-toastify";
@@ -172,11 +173,7 @@ const ExploreChallenges = () => {
             </Button>
 
             {/* Popover that acts like a dropdown modal */}
-            <Popover
-              id={id}
-              open={open}
-              anchorEl={anchorEl}
-              onClose={handleClose}
+            <PopoverPaper
               anchorOrigin={{
                 vertical: "bottom",
                 horizontal: "left",
@@ -223,7 +220,8 @@ const ExploreChallenges = () => {
                   ))}
                 </FormGroup>
               </div>
-            </Popover>
+            </PopoverPaper>
+
           </Box>
           </Box>
 
