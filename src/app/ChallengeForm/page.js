@@ -153,7 +153,7 @@ const ChallengeForm = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <FormLabel htmlFor="challenge-name" required>
+          <FormLabel htmlFor="challenge-name" required sx={{color : 'black'}}>
             Challenge name
           </FormLabel>
           <OutlinedInput
@@ -175,13 +175,13 @@ const ChallengeForm = () => {
           }}
         >
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-            <FormLabel htmlFor="startDate" required>
+            <FormLabel htmlFor="startDate" required sx={{color : 'black'}}>
               Start Date
             </FormLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker", "DatePicker"]}>
                 <DatePicker
-                  label="Choose Start Date"
+                  label="Add start date"
                   name="startDate"
                   value={
                     challengeDetails.startDate
@@ -195,13 +195,13 @@ const ChallengeForm = () => {
             </LocalizationProvider>
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-            <FormLabel htmlFor="endDate" required>
+            <FormLabel htmlFor="endDate" required sx={{color : 'black'}}>
               End Date
             </FormLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker", "DatePicker"]}>
                 <DatePicker
-                  label="Choose End Date"
+                  label="Add end date"
                   name="endDate"
                   value={
                     challengeDetails.endDate
@@ -216,7 +216,7 @@ const ChallengeForm = () => {
           </Box>
         </Box>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <FormLabel htmlFor="challenge-description" required>
+          <FormLabel htmlFor="challenge-description" required sx={{color : 'black'}}>
             Description
           </FormLabel>
           <TextField
@@ -234,7 +234,7 @@ const ChallengeForm = () => {
           />
         </Box>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <FormLabel htmlFor="challenge-description" required>
+          <FormLabel htmlFor="challenge-description" required sx={{color : 'black'}}>
             Image
           </FormLabel>
           <Button
@@ -269,7 +269,7 @@ const ChallengeForm = () => {
             gap: 2,
           }}
         >
-          <FormLabel htmlFor="challenge-description" required>
+          <FormLabel htmlFor="challenge-description" required sx={{color : 'black'}}>
             Level Type
           </FormLabel>
           <FormControl sx={{ display: "block" }}>
