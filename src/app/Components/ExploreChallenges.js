@@ -1,11 +1,20 @@
-"use client"
+"use client";
 import { Box, Button, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { Search } from "@mui/icons-material";
 import ChallengeCard from "./ChallengeCard";
 
 const ExploreChallenges = () => {
-    const [challenges, setChallenges] =useState([]);
+  const [challenges, setChallenges] = useState([]);
+  const challengeDetails = {
+    challengeName: "Data Sprint 72 - Butterfly Identification",
+    challengeImg: "/media/challenge-card.svg",
+    challengeDescription:
+      "Identify the class to which each butterfly belongs to",
+    level: "easy",
+    startDate: "2023-11-12",
+    endDate: "2025-01-31",
+  };
   return (
     <Box
       sx={{
@@ -33,49 +42,61 @@ const ExploreChallenges = () => {
         </Typography>
 
         <Box
-        sx={{
-            display:"flex",
-            flexDirection:"row",
-            justifyContent:"center"
-        }}
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
         >
-        <Box
-        sx={{
-            backgroundColor:"white",
-            borderRadius:"12px",
-            width:"30%",
-            height:"30px"
-        }}
-        > 
+          <Box
+            sx={{
+              backgroundColor: "white",
+              borderRadius: "12px",
+              width: "30%",
+              height: "30px",
+            }}
+          >
             {/* <SearchIcon */}
             <Search
-            sx={{
-                color:"black"
-            }}
+              sx={{
+                color: "black",
+              }}
             />
             <Typography
-             sx={{
-                color:"black"
-            }}
+              sx={{
+                color: "black",
+              }}
             >
-                Search
+              Search
             </Typography>
-        </Box>
+          </Box>
 
-        <Box>
-            <Button sx={{backgroundColor:"white", color:"black"}} >Filter</Button>
-        </Box>
+          <Box>
+            <Button sx={{ backgroundColor: "white", color: "black" }}>
+              Filter
+            </Button>
+          </Box>
         </Box>
       </Box>
 
       {/* challenges cards */}
       <Box
-      sx={{
-        backgroundColor:"rgba(0, 49, 69, 1)",
-        p:4
-      }}
+        sx={{
+          backgroundColor: "rgba(0, 49, 69, 1)",
+          p: 4,
+          display: "flex",
+          flexDirection: {
+            sm: "column",
+            md: "row",
+          },
+          flexWrap: "wrap",
+          alignItems: "flex-start",
+          // justifyContent: "center",
+          gap: 2,
+          margin: "auto auto",
+        }}
       >
-        {
+        {/* {
             challenges.length===0?
             <Box 
             sx={{
@@ -94,7 +115,12 @@ const ExploreChallenges = () => {
                 )
                })}
             </Box>
-        }
+        } */}
+        <ChallengeCard challengeDetails={challengeDetails} />
+        <ChallengeCard challengeDetails={challengeDetails} />
+        <ChallengeCard challengeDetails={challengeDetails} />
+        <ChallengeCard challengeDetails={challengeDetails} />
+        <ChallengeCard challengeDetails={challengeDetails} />
       </Box>
     </Box>
   );

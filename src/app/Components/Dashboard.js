@@ -3,7 +3,9 @@ import React from "react";
 import Image from "next/image";
 import { Box, Button, Typography } from "@mui/material";
 import DashboardCards from "./DashboardCards";
+import { useRouter } from "next/navigation";
 const Dashboard = () => {
+  const router=useRouter();
   return (
     <div>
       {/* blue section 1 */}
@@ -21,14 +23,6 @@ const Dashboard = () => {
         <Box
           sx={{
             width: "60%",
-            // display:{
-            //   sm:"none",
-            //   md:"flex"
-            // },
-            // flexDirection:{
-            //    sm:"col",
-            //   md:"flex"
-            // },
             whiteSpace: "normal",
             wordWrap: "break-word",
             px: 4,
@@ -77,6 +71,7 @@ const Dashboard = () => {
               borderRadius: "10px",
               fontWeight: "bold",
             }}
+            onClick={()=>(route.push('/ChallengeForm'))}
           >
             Create Challenge
           </Button>
