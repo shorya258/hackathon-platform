@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FormLabel from "@mui/material/FormLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { Box, Button, TextField, Typography } from "@mui/material";
@@ -16,12 +16,13 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useRouter } from "next/navigation";
+import { useRouter,useSearchParams } from "next/navigation";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 const ChallengeForm = () => {
   const router = useRouter();
   const [image, setImage] = useState(null);
-
+  const searchParams = useSearchParams();
+  const [challengeId, setChallengeId] = useState(searchParams.get("requestId"));
   const [challengeDetails, setChallengeDetails] = useState({
     challengeName: "",
     startDate: null,
@@ -31,13 +32,44 @@ const ChallengeForm = () => {
     image: "",
     status: "",
   });
+  useEffect(() => {
+    getChallengeById();
+  }, [])
+  const getChallengeById = async () => {
+    if(!challengeId) {
+      return;
+    }
+    const response = await fetch(`/api/get-single-challenge`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },      
+      body: JSON.stringify({
+        challengeId
+      }),
+    });
+    const responseJson = await response.json();
+    const statusCode = response.status;
+
+    //console.log(json.status);
+    if (statusCode === 201) {
+      console.log("success");
+      console.log("SINGLE CHALLENGE" , responseJson);
+      setChallengeDetails(responseJson.foundChallenge)
+    } else if (statusCode === 400) {
+      toast.error(json.error);
+    } else {
+      toast.error("Failed to add the item!");
+    }
+  };
+
   async function uploadFileToFirebaseStorage(file) {
     const storageRef = ref(storage, `images/${file.name}`);
     const snapshot = await uploadBytes(storageRef, file);
     const downloadURL = await getDownloadURL(storageRef);
     return downloadURL;
   }
-  async function handleUpload() {
+  async function handleUpload(image) {
     if (!image) {
       alert("Please select an image to upload");
       return;
@@ -60,6 +92,7 @@ const ChallengeForm = () => {
       console.log("Selected file:", file);
       let value = URL.createObjectURL(file);
       setImage(file);
+      handleUpload(file)
     }
   };
 
@@ -121,12 +154,36 @@ const ChallengeForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleCreate = (e) => {
     e.preventDefault();
     createChallenge(challengeDetails);
-    console.log(challengeDetails);
   };
-
+  const handleEdit = (e) => {
+    e.preventDefault();
+    editChallenge(challengeDetails);
+  };
+  async function editChallenge() {
+    const response = await fetch(`/api/create-challenge`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        challengeDetails: challengeDetails,
+      }),
+    });
+    const json = await response.json();
+    console.log(json);
+    const statusCode = response.status;
+    if (statusCode === 201) {
+      toast.success("Challenge edited!");
+      router.push("/");
+    } else if (statusCode === 400) {
+      toast.error(json.error);
+    } else {
+      toast.error("Failed to add the item!");
+    }
+  }
   return (
     <Box sx={{}}>
       <ToastContainer />
@@ -290,7 +347,7 @@ const ChallengeForm = () => {
           </FormControl>
         </Box>
         <Button
-          onClick={handleSubmit}
+          onClick={challengeId ? handleEdit : handleCreate}
           sx={{
             color: "white",
             backgroundColor: " rgba(68, 146, 76, 1)",
@@ -303,7 +360,7 @@ const ChallengeForm = () => {
             borderRadius: 3,
           }}
         >
-          Create Challenge
+          {challengeId ? "Edit Challenge" : "Create Challenge"}
         </Button>
       </Box>
     </Box>

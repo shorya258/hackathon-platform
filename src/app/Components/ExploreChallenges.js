@@ -7,15 +7,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const ExploreChallenges = () => {
   const [challenges, setChallenges] = useState([]);
-  const challengeDetails = {
-    challengeName: "Data Sprint 72 - Butterfly Identification",
-    challengeImg: "/media/challenge-card.svg",
-    challengeDescription:
-      "Identify the class to which each butterfly belongs to",
-    level: "easy",
-    startDate: "2024-09-09",
-    endDate: "2025-04-04",
-  };
   const getChallenges = async (status, level) => {
     const response = await fetch(`/api/get-challenges`, {
       method: "POST",

@@ -7,8 +7,10 @@ import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
 import { Box, Button, CardActions } from "@mui/material";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 const ChallengeCard = ({ challengeDetails }) => {
   const {
+    _id,
     challengeName,
     startDate,
     endDate,
@@ -18,7 +20,7 @@ const ChallengeCard = ({ challengeDetails }) => {
   } = challengeDetails;
   const [status, setStatus] = useState("");
   const [timeLeft, setTimeLeft] = useState({});
-
+  const router=useRouter();
   useEffect(() => {
     // Convert startTime and endTime to Date objects
     const start = new Date(startDate);
@@ -341,6 +343,7 @@ const ChallengeCard = ({ challengeDetails }) => {
               height: "auto",
               borderRadius: "18px",
             }}
+          onClick={()=>router.push(`/ChallengeForm?requestId=${_id}`)}
           >
             <Image
               src={"/media/participate-now.svg"}
