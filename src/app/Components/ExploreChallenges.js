@@ -1,9 +1,10 @@
 "use client";
 import { Box, Button, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Search } from "@mui/icons-material";
 import ChallengeCard from "./ChallengeCard";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const ExploreChallenges = () => {
   const [challenges, setChallenges] = useState([]);
   const challengeDetails = {
@@ -12,15 +13,46 @@ const ExploreChallenges = () => {
     challengeDescription:
       "Identify the class to which each butterfly belongs to",
     level: "easy",
-    startDate: "2023-11-12",
-    endDate: "2025-01-31",
+    startDate: "2024-09-09",
+    endDate: "2025-04-04",
   };
+  const getChallenges=async(status,level)=>{
+    const response = await fetch(`/api/get-challenges`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status:status,
+        level:level
+      }),
+    });
+    const json = await response.json();
+    console.log(json);
+    const statusCode = response.status;
+
+    //console.log(json.status);
+    if (statusCode === 201) {
+      console.log("success")
+      // setChallenges(json.challenges)
+    } else if (statusCode === 400) {
+      toast.error(json.error);
+    } else {
+      toast.error("Failed to add the item!");
+    }
+  }
+
+  useEffect(() => {
+    getChallenges("All",null);
+  }, [])
+  
   return (
     <Box
       sx={{
         width: "100%",
       }}
     >
+      <ToastContainer/>
       {/* explore challenges box */}
 
       <Box

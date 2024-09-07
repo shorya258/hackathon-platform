@@ -17,10 +17,13 @@ const challengeSchema = new Schema(
     level:{
       type:String,
       // required: true,
+    },
+    image: {
+      type: String,
+    },
+    status:{
+      type: String
     }
-    // image: {
-    //   type: String,
-    // },
   },
   {
     timestamps: true,

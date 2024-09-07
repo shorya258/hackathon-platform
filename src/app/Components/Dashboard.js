@@ -71,7 +71,7 @@ const Dashboard = () => {
               borderRadius: "10px",
               fontWeight: "bold",
             }}
-            onClick={()=>(router.push('/ChallengeForm'))}
+            onClick={()=>router.push('/ChallengeForm')}
           >
             Create Challenge
           </Button>

@@ -6,13 +6,15 @@ export async function POST(req) {
     const body = await req.json();
     const { challengeDetails } = body;
     if (
-      !challengeDetails.challengeName || 
+      !challengeDetails.challengeName ||
       !challengeDetails.challengeDescription ||
       !challengeDetails.startDate ||
-      !challengeDetails.endDate||
-      !challengeDetails.level
+      !challengeDetails.endDate ||
+      !challengeDetails.level ||
+      !challengeDetails.image ||
+      !challengeDetails.status
     ) {
-      console.log(challengeDetails)
+      console.log(challengeDetails);
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -21,10 +23,12 @@ export async function POST(req) {
     await connectToDatabase();
     const newChallenge = new challenge({
       challengeName: challengeDetails.challengeName,
-      startDate: challengeDetails.startDate,
-      endDate: challengeDetails.endDate,
+      startDate: new Date(challengeDetails.startDate),
+      endDate: new Date(challengeDetails.endDate),
       challengeDescription: challengeDetails.challengeDescription,
-      level:challengeDetails.level
+      level: challengeDetails.level,
+      image: challengeDetails.image,
+      status: challengeDetails.status,
     });
     await newChallenge.save();
     return NextResponse.json(
@@ -48,8 +52,10 @@ export async function PUT(req) {
       !challengeDetails.challengeName ||
       !challengeDetails.challengeDescription ||
       !challengeDetails.startDate ||
-      !challengeDetails.endDate||
-      !challengeDetails.level
+      !challengeDetails.endDate ||
+      !challengeDetails.level ||
+      !challengeDetails.image ||
+      !challengeDetails.status
     ) {
       return NextResponse.json(
         { error: "Missing required fields" },
@@ -58,16 +64,22 @@ export async function PUT(req) {
     }
     await connectToDatabase();
     const objectId = challengeDetails._id;
-    console.log(objectId)
-    const updatedChallenge= await challenge.findByIdAndUpdate(objectId, {
-      challengeName: challengeDetails.challengeName,
-      startDate: challengeDetails.startDate,
-      endDate: challengeDetails.endDate,
-      challengeDescription: challengeDetails.challengeDescription,
-      level:challengeDetails.level
-    },{ new: true })
+    console.log(objectId);
+    const updatedChallenge = await challenge.findByIdAndUpdate(
+      objectId,
+      {
+        challengeName: challengeDetails.challengeName,
+        startDate: challengeDetails.startDate,
+        endDate: challengeDetails.endDate,
+        challengeDescription: challengeDetails.challengeDescription,
+        level: challengeDetails.level,
+        image: challengeDetails.image,
+        status: challengeDetails.status,
+      },
+      { new: true }
+    );
 
-    if(!updatedChallenge){
+    if (!updatedChallenge) {
       return NextResponse.json(
         { error: "Could not change the product" },
         { status: 500 }
@@ -87,9 +99,9 @@ export async function PUT(req) {
 }
 
 // .catch((e)=>{
-    //   console.log(e)
-    //   return NextResponse.json(
-    //     { error: "Failed to change the product" },
-    //     { status: 500 }
-    //   );
-    // })
+//   console.log(e)
+//   return NextResponse.json(
+//     { error: "Failed to change the product" },
+//     { status: 500 }
+//   );
+// })

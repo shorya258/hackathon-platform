@@ -1,16 +1,36 @@
-"use client"
+"use client";
 import React, { useState } from "react";
-import { Button, TextField } from '@mui/material';
+import FormLabel from "@mui/material/FormLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import { Box, Button, TextField, Typography } from "@mui/material";
+import dayjs from "dayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { storage, db } from "../../../firebaseConfig";
-import {
-  ref,
-  getDownloadURL,
-  uploadBytes,
-} from "firebase/storage";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
 
 const ChallengeForm = () => {
+  const router= useRouter();
   const [image, setImage] = useState(null);
 
+  const [challengeDetails, setChallengeDetails] = useState({
+    challengeName: "",
+    startDate: null,
+    endDate: null,
+    challengeDescription: "",
+    level: "",
+    image: "",
+    status: "",
+  });
   async function uploadFileToFirebaseStorage(file) {
     const storageRef = ref(storage, `images/${file.name}`);
     const snapshot = await uploadBytes(storageRef, file);
@@ -24,8 +44,12 @@ const ChallengeForm = () => {
     }
     try {
       const downloadURL = await uploadFileToFirebaseStorage(image);
-      console.log(downloadURL , "DOWNLOAD URL")
-      // console.log("File uploaded and URL saved successfully:", downloadURL);
+      console.log(downloadURL, "DOWNLOAD URL");
+      let oldChallenge = challengeDetails;
+      oldChallenge.image = downloadURL;
+      setChallengeDetails(oldChallenge);
+      setImage(null);
+      console.log("File uploaded and URL saved successfully:", downloadURL);
     } catch (error) {
       console.error("Error uploading file:", error);
     }
@@ -33,29 +57,235 @@ const ChallengeForm = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      console.log('Selected file:', file);
+      console.log("Selected file:", file);
       let value = URL.createObjectURL(file);
       setImage(file);
     }
   };
+
+  const createChallenge = async (challengeDetails) => {
+    const oldChallengeDetails= challengeDetails;
+    const start = new Date(challengeDetails.startDate);
+    const end = new Date(challengeDetails.endDate);
+    const now = new Date();
+    if (now < start) {
+      oldChallengeDetails.status="upcoming";
+    } else if (now >= start && now <= end) {
+      oldChallengeDetails.status="active";
+    } else if (now > end) {
+      oldChallengeDetails.status="past";
+    }
+    setChallengeDetails(oldChallengeDetails);
+    const response = await fetch(`/api/create-challenge`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        challengeDetails: challengeDetails,
+      }),
+    });
+    const json = await response.json();
+    console.log(json);
+    const statusCode = response.status;
+
+    //console.log(json.status);
+    if (statusCode === 201) {
+      toast.success("Challenge added!");
+      router.push("/");
+    } else if (statusCode === 400) {
+      toast.error(json.error);
+    } else {
+      toast.error("Failed to add the item!");
+    }
+  };
+
+  const onChange = (e) => {
+    const { name, value } = e.target; // Destructure the name and value for normal inputs
+    setChallengeDetails({
+      ...challengeDetails,
+      [name]: value, // Dynamically update the value for the input
+    });
+  };
+
+  // onChange handler for DatePicker
+  const onDateChange = (name, newValue) => {
+    const formattedDate = dayjs(newValue).format("YYYY-MM-DD");
+    if (newValue) {
+      setChallengeDetails({
+        ...challengeDetails,
+        [name]: formattedDate, // Update the specific date field
+      });
+    } else {
+      console.log("Invalid date");
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    createChallenge(challengeDetails);
+    console.log(challengeDetails);
+  };
+
   return (
-    <div>
-    {/* File Input using TextField */}
-    <TextField
-      type="file"
-      variant="outlined"
-      onChange={handleFileChange}
-      InputLabelProps={{
-        shrink: true,
+    <Box
+      sx={{
+        my: 4,
       }}
-    />
-    <label htmlFor="contained-button-file">
-      <Button variant="contained" component="span" onClick={handleUpload}>
-        Upload
-      </Button>
-    </label>
-  </div>
-  )
-}
+    >
+      <ToastContainer />
+      <Typography
+        sx={{
+          backgroundColor: "rgba(248, 249, 253, 1)",
+          fontSize: "24px",
+          fontWeight: "bold",
+          px: 8,
+          py: 4,
+        }}
+      >
+        Challenge Details
+      </Typography>
+
+      <Box
+        sx={{
+          width: "80%",
+          display: "flex",
+          flexDirection: "column",
+          m: "auto",
+          gap: { sm: 4, md: 8 },
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <FormLabel htmlFor="challenge-name" required>
+            Challenge name
+          </FormLabel>
+          <OutlinedInput
+            id="challengename"
+            name="challengeName"
+            type="text"
+            required
+            size="small"
+            value={challengeDetails.challengeName}
+            onChange={onChange}
+            sx={{ width: "50%" }}
+          />
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { sm: "column", md: "row", gap: 3 },
+          }}
+        >
+          <Box sx={{}}>
+            <FormLabel htmlFor="startDate" required>
+              Start Date
+            </FormLabel>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker", "DatePicker"]}>
+                <DatePicker
+                  label="Choose Start Date"
+                  name="startDate"
+                  value={
+                    challengeDetails.startDate
+                      ? dayjs(challengeDetails.startDate)
+                      : null
+                  }
+                  onChange={(newValue) => onDateChange("startDate", newValue)}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+          </Box>
+          <Box>
+            <FormLabel htmlFor="endDate" required>
+              End Date
+            </FormLabel>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker", "DatePicker"]}>
+                <DatePicker
+                  label="Choose End Date"
+                  name="endDate"
+                  value={
+                    challengeDetails.endDate
+                      ? dayjs(challengeDetails.endDate)
+                      : null
+                  }
+                  onChange={(newValue) => onDateChange("endDate", newValue)}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+          </Box>
+        </Box>
+        <Box>
+          <FormLabel htmlFor="challenge-description" required>
+            Description
+          </FormLabel>
+          <TextField
+            multiline
+            rows={4}
+            variant="outlined"
+            fullWidth
+            name="challengeDescription"
+            value={challengeDetails.challengeDescription}
+            onChange={onChange}
+            required
+          />
+        </Box>
+        <div>
+          {/* File Input using TextField */}
+          <TextField
+            type="file"
+            variant="outlined"
+            onChange={handleFileChange}
+            InputLabelProps={{
+              shrink: true,
+            }}
+
+            // onChange={onChange}
+          />
+          <label htmlFor="contained-button-file">
+            <Button variant="contained" component="span" onClick={handleUpload}>
+              Upload
+            </Button>
+          </label>
+        </div>
+
+        {/* level */}
+        <Box sx={{ minWidth: { sm: 50, md: "180px" } }}>
+          <FormControl>
+            <InputLabel id="demo-simple-select-label" required>
+              Level
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              name="level"
+              value={challengeDetails.level}
+              label="level"
+              required
+              onChange={onChange}
+            >
+              <MenuItem value={"Easy"}>Easy</MenuItem>
+              <MenuItem value={"Medium"}>Medium</MenuItem>
+              <MenuItem value={"Hard"}>Hard</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+        <Button
+          onClick={handleSubmit}
+          sx={{
+            color: "white",
+            backgroundColor: " rgba(68, 146, 76, 1)",
+            display: "inline",
+            width: "300px",
+            p: 2,
+            fontSize: "18px",
+          }}
+        >
+          Create Challenge
+        </Button>
+      </Box>
+    </Box>
+  );
+};
 
 export default ChallengeForm;
