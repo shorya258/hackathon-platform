@@ -70,7 +70,7 @@ const ExploreChallenges = () => {
     startDate: "2024-09-09",
     endDate: "2025-04-04",
   };
-  const getChallenges = async (status, level) => {
+  const getChallenges = async (statusOptions, levelOptions) => {
     const response = await fetch(`/api/get-challenges`, {
       method: "POST",
       headers: {
@@ -168,7 +168,7 @@ const ExploreChallenges = () => {
           <Box>
             {/* Button to trigger the dropdown */}
             <Button sx={{ backgroundColor:"white", color:"black", mx:4, px:4  }}  onClick={handleClick}>
-              Filter
+              Filter <ExpandMoreIcon/>
             </Button>
 
             {/* Popover that acts like a dropdown modal */}
