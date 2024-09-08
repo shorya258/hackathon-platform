@@ -114,8 +114,7 @@ const ChallengeCard = ({ challengeDetails }) => {
   };
 
   return (
-    <Box onClick={() => router.push(`/ChallengeDetails?requestId=${_id}`)} sx={{flexGrow:1 }}  >
-      <Card sx={{ width: "345px", m: 4, height: "auto", borderRadius: "14px" }}>
+      <Card onClick={() => router.push(`/ChallengeDetails?requestId=${_id}`)}  sx={{ width: "345px", m: 4, height: "auto", borderRadius: "14px" }}>
         <CardActionArea>
           <CardMedia
             component="img"
@@ -404,7 +403,6 @@ const ChallengeCard = ({ challengeDetails }) => {
           </Button>
         </CardActions>
       </Card>
-    </Box>
   );
 };
 
