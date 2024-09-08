@@ -177,6 +177,8 @@ const ExploreChallenges = () => {
               display: "flex",
               flexDirection: "row",
               justifyContent: "center",
+              P:2,
+              m:3
             }}
           >
             <Box
@@ -190,7 +192,6 @@ const ExploreChallenges = () => {
                 alignItems:"center"
               }}
             >
-              {/* <SearchIcon */}
               <Search
                 sx={{
                   color: "black",
