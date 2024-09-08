@@ -15,6 +15,7 @@ const Dashboard = () => {
           backgroundColor: "rgba(0, 49, 69, 1)",
           display: "flex",
           flexDirection: "row",
+          justifyContent: "center",
           color: "white",
           px: 4,
           py: 4,
@@ -101,7 +102,7 @@ const Dashboard = () => {
           justifyContent: "center",
           color: "white",
           px: 4,
-          py: 4,
+          py: 8,
         }}
       >
         <Box
@@ -141,7 +142,7 @@ const Dashboard = () => {
             flexDirection: "row",
             borderRight: 2,
             borderColor: "white",
-            px: 4,
+            px: 12,
           }}
         >
           <Image
@@ -204,7 +205,8 @@ const Dashboard = () => {
             flexDirection: "row",
             justifyContent: "center",
             mx: 5,
-            my: 5,
+            mt: 8,
+            mb: 6
           }}
         >
           <Typography
