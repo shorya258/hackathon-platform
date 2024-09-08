@@ -16,6 +16,8 @@ import {
   FormGroup,
   Popover,
   PopoverPaper,
+  OutlinedInput,
+  Input,
 } from "@mui/material";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -29,20 +31,21 @@ const ExploreChallenges = () => {
   const levelOptions = ["easy", "Medium", "Hard"];
   const [anchorEl, setAnchorEl] = useState(null);
   const [showExpandIcon, toggleShowExpandIcon] = useState(true);
-
+  const [searchedTerm, setSearchedTerm] = useState("");
+  const [filteredChallenges, setFilteredChallenges] = useState([]);
   // Handle opening and closing of popover
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
     toggleShowExpandIcon(false);
-    document.body.style.overflow = 'hidden';
-    document.body.style.paddingRight = '0px'; 
+    document.body.style.overflow = "hidden";
+    document.body.style.paddingRight = "0px";
   };
 
   const handleClose = () => {
     setAnchorEl(null);
     toggleShowExpandIcon(true);
-    document.body.style.overflow = 'auto';
-    document.body.style.paddingRight = ''; 
+    document.body.style.overflow = "auto";
+    document.body.style.paddingRight = "";
   };
 
   // Determine if the popover is open
@@ -97,10 +100,41 @@ const ExploreChallenges = () => {
     if (statusCode === 201) {
       console.log("success");
       setChallenges(json.challenges);
+      setFilteredChallenges(json.challenges);
     } else if (statusCode === 400) {
       toast.error(json.error);
     } else {
       toast.error("Failed to add the item!");
+    }
+  };
+  const handleSearchBar = (searchedValue) => {
+    console.log("searched val", searchedValue);
+    setSearchedTerm(searchedValue);
+  };
+  const titleGotSearched = () => {
+    console.log(searchedTerm);
+    if (searchedTerm !== "") {
+      const searchedChallenges = challenges.filter((singleChallenge) => {
+        return singleChallenge.challengeName
+          .toLowerCase()
+          .includes(searchedTerm.toLowerCase());
+      });
+      setFilteredChallenges(searchedChallenges);
+    } else {
+      setFilteredChallenges(challenges);
+    }
+  };
+
+  const handleRemoveItem = (item, arrayName) => {
+    console.log("handle remove item called");
+    if (arrayName === "status") {
+      setStatusFilters((statusFilters) =>
+        statusFilters.filter((i) => i !== item)
+      );
+    } else {
+      setLevelFilters((statusFilters) =>
+        statusFilters.filter((i) => i !== item)
+      );
     }
   };
 
@@ -124,24 +158,11 @@ const ExploreChallenges = () => {
     }
   }, [statusFilters, levelFilters]);
 
-  const handleRemoveItem = (item, arrayName) => {
-    console.log("handle remove item called");
-    if (arrayName === "status") {
-      setStatusFilters((statusFilters) =>
-        statusFilters.filter((i) => i !== item)
-      );
-    } else {
-      setLevelFilters((statusFilters) =>
-        statusFilters.filter((i) => i !== item)
-      );
-    }
-  };
-
   return (
     <Box
       sx={{
         width: "100%",
-        p:0
+        p: 0,
       }}
     >
       <ToastContainer />
@@ -177,19 +198,19 @@ const ExploreChallenges = () => {
               display: "flex",
               flexDirection: "row",
               justifyContent: "center",
-              P:2,
-              m:3
+              P: 2,
+              m: 3,
             }}
           >
             <Box
               sx={{
                 backgroundColor: "white",
-                display:"flex",
-                flexDirection:"row",
+                display: "flex",
+                flexDirection: "row",
                 borderRadius: "12px",
                 width: "30%",
                 height: "40px",
-                alignItems:"center"
+                alignItems: "center",
               }}
             >
               <Search
@@ -197,13 +218,15 @@ const ExploreChallenges = () => {
                   color: "black",
                 }}
               />
-              <Typography
-                sx={{
-                  color: "black",
+              <Input
+                type="text"
+                value={searchedTerm}
+                placeholder="Search"
+                onChange={(e) => {
+                  handleSearchBar(e.target.value);
+                  titleGotSearched(e.target.value);
                 }}
-              >
-                Search
-              </Typography>
+              />
             </Box>
 
             <div>
@@ -221,7 +244,10 @@ const ExploreChallenges = () => {
                   onClick={handleClose}
                 ></div>
               )}
-              <Button sx={{backgroundColor:"white", color:"black"}} onClick={handleClick}>
+              <Button
+                sx={{ backgroundColor: "white", color: "black" }}
+                onClick={handleClick}
+              >
                 Filter
                 {showExpandIcon && <ExpandMoreIcon />}
                 {!showExpandIcon && <ExpandLessIcon />}
@@ -361,7 +387,7 @@ const ExploreChallenges = () => {
           margin: "auto auto",
         }}
       >
-        {challenges.length === 0 ? (
+        {filteredChallenges.length === 0 ? (
           <Box
             sx={{
               color: "white",
@@ -374,7 +400,7 @@ const ExploreChallenges = () => {
           </Box>
         ) : (
           <>
-            {challenges?.map((singleChallengeDetails, key) => {
+            {filteredChallenges?.map((singleChallengeDetails, key) => {
               // console.log(first)
               return (
                 <ChallengeCard
