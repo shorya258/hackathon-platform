@@ -264,6 +264,7 @@ const ExploreChallenges = () => {
                   vertical: "top",
                   horizontal: "left",
                 }}
+                disableScrollLock
               >
                 <div style={{ padding: "20px", width: "300px" }}>
                   {/* Status Section */}
