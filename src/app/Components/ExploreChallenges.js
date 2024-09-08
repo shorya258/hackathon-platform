@@ -26,7 +26,7 @@ const ExploreChallenges = () => {
   const [levelFilters, setLevelFilters] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   // Status options
-  const statusOptions = ['All', 'Active', 'Upcoming', 'Past'];
+  const statusOptions = ["All", "Active", "Upcoming", "Past"];
   // Level options
   const levelOptions = ["Easy", "Medium", "Hard"];
 
@@ -137,116 +137,150 @@ const ExploreChallenges = () => {
           }}
         >
           <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-          }}
-          >
-          <Box
             sx={{
-              backgroundColor: "white",
-              borderRadius: "12px",
-              width: "30%",
-              height: "30px",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
             }}
           >
-            {/* <SearchIcon */}
-            <Search
+            <Box
               sx={{
-                color: "black",
-              }}
-            />
-            <Typography
-              sx={{
-                color: "black",
+                backgroundColor: "white",
+                borderRadius: "12px",
+                width: "30%",
+                height: "30px",
               }}
             >
-              Search
-            </Typography>
-          </Box>
-
-          <Box>
-            {/* Button to trigger the dropdown */}
-            <Button sx={{ backgroundColor:"white", color:"black", mx:4, px:4  }}  onClick={handleClick}>
-              Filter <ExpandMoreIcon/>
-            </Button>
-
-            {/* Popover that acts like a dropdown modal */}
-            <PopoverPaper
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-            >
-              <div style={{ padding: "20px", width: "250px" }}>
-                <Typography>Status</Typography>
-                <FormGroup>
-                  {statusOptions.map((status) => (
-                    <FormControlLabel
-                      key={status}
-                      control={
-                        <Checkbox
-                          checked={statusFilters.includes(status)}
-                          onChange={handleStatusChange}
-                          name={status}
-                        />
-                      }
-                      label={status}
-                    />
-                  ))}
-                </FormGroup>
-
-                <Divider style={{ margin: "10px 0" }} />
-
-                <Typography>Level</Typography>
-                <FormGroup>
-                  {levelOptions.map((level) => (
-                    <FormControlLabel
-                      key={level}
-                      control={
-                        <Checkbox
-                          checked={levelFilters.includes(level)}
-                          onChange={handleLevelChange}
-                          name={level}
-                        />
-                      }
-                      label={level}
-                    />
-                  ))}
-                </FormGroup>
-              </div>
-            </PopoverPaper>
-
-          </Box>
-          </Box>
-
-          <Box sx={{}} >
-            {statusFilters?.map((filterItem)=>{
-              {console.log(filterItem)}
-              return(
-              <Typography  sx={{borderRadius:1, backgroundColor:"rgba(248, 249, 253, 0.49)", color:"white", display:"inline", p:1, m:2, borderRadius:2 }} >
-                {filterItem}
-                <Image src={"/media/cross-icon.svg"} alt={"cross icon"} height={20} width={20} />
+              {/* <SearchIcon */}
+              <Search
+                sx={{
+                  color: "black",
+                }}
+              />
+              <Typography
+                sx={{
+                  color: "black",
+                }}
+              >
+                Search
               </Typography>
-              )
-            })}
-            {levelFilters?.map((filterItem)=>{
-              {console.log(filterItem)}
-              return(
-                <Typography  sx={{borderRadius:1, backgroundColor:"rgba(248, 249, 253, 0.49)", color:"white", display:"inline", p:1, m:2, borderRadius:2 }} >
-                {filterItem}
-                <Image src={"/media/cross-icon.svg"} alt={"cross icon"} height={20} width={20} />
-              </Typography>
-              )
-            })}
             </Box>
 
+            <Box>
+              {/* Button to trigger the dropdown */}
+              <Button
+                sx={{ backgroundColor: "white", color: "black", mx: 4, px: 4 }}
+                onClick={handleClick}
+              >
+                Filter <ExpandMoreIcon />
+              </Button>
 
+              {/* Popover that acts like a dropdown modal */}
+              <PopoverPaper
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+              >
+                <div style={{ padding: "20px", width: "250px" }}>
+                  <Typography>Status</Typography>
+                  <FormGroup>
+                    {statusOptions.map((status) => (
+                      <FormControlLabel
+                        key={status}
+                        control={
+                          <Checkbox
+                            checked={statusFilters.includes(status)}
+                            onChange={handleStatusChange}
+                            name={status}
+                          />
+                        }
+                        label={status}
+                      />
+                    ))}
+                  </FormGroup>
+
+                  <Divider style={{ margin: "10px 0" }} />
+
+                  <Typography>Level</Typography>
+                  <FormGroup>
+                    {levelOptions.map((level) => (
+                      <FormControlLabel
+                        key={level}
+                        control={
+                          <Checkbox
+                            checked={levelFilters.includes(level)}
+                            onChange={handleLevelChange}
+                            name={level}
+                          />
+                        }
+                        label={level}
+                      />
+                    ))}
+                  </FormGroup>
+                </div>
+              </PopoverPaper>
+            </Box>
+          </Box>
+
+          <Box sx={{}}>
+            {statusFilters?.map((filterItem) => {
+              {
+                console.log(filterItem);
+              }
+              return (
+                <Typography
+                  sx={{
+                    borderRadius: 1,
+                    backgroundColor: "rgba(248, 249, 253, 0.49)",
+                    color: "white",
+                    display: "inline",
+                    p: 1,
+                    m: 2,
+                    borderRadius: 2,
+                  }}
+                >
+                  {filterItem}
+                  <Image
+                    src={"/media/cross-icon.svg"}
+                    alt={"cross icon"}
+                    height={20}
+                    width={20}
+                  />
+                </Typography>
+              );
+            })}
+            {levelFilters?.map((filterItem) => {
+              {
+                console.log(filterItem);
+              }
+              return (
+                <Typography
+                  sx={{
+                    borderRadius: 1,
+                    backgroundColor: "rgba(248, 249, 253, 0.49)",
+                    color: "white",
+                    display: "inline",
+                    p: 1,
+                    m: 2,
+                    borderRadius: 2,
+                  }}
+                >
+                  {filterItem}
+                  <Image
+                    src={"/media/cross-icon.svg"}
+                    alt={"cross icon"}
+                    height={20}
+                    width={20}
+                  />
+                </Typography>
+              );
+            })}
+          </Box>
         </Box>
       </Box>
 

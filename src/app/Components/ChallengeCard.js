@@ -83,7 +83,9 @@ const ChallengeCard = ({ challengeDetails }) => {
   };
 
   return (
-    <div>
+    <div
+          onClick={()=>router.push(`/ChallengeDetails?requestId=${_id}`)}
+     >
       <Card sx={{ width: 345, m: 4, height: "auto", borderRadius: "14px" }}>
         <CardActionArea>
           <CardMedia
@@ -343,7 +345,7 @@ const ChallengeCard = ({ challengeDetails }) => {
               height: "auto",
               borderRadius: "18px",
             }}
-          onClick={()=>router.push(`/ChallengeForm?requestId=${_id}`)}
+          // onClick={()=>router.push(`/ChallengeForm?requestId=${_id}`)}
           >
             <Image
               src={"/media/participate-now.svg"}

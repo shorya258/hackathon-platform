@@ -4,7 +4,10 @@ import { NextResponse } from "next/server";
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { statusOptions, leveloptions } = body;
+    const { statusOptions, levelOptions } = body;
+    // [All, Upcoming, Ended, Active]= status
+    console.log(body)
+    // [Hard, easy, medium]=level
     if (!statusOptions) {
       return NextResponse.json(
         { error: "Missing required fields" },
@@ -12,21 +15,34 @@ export async function POST(req) {
       );
     }
     await connectToDatabase();
+
     let challenges = {};
-    if (status === "All") {
-      if (level === null) {
+
+    if (statusOptions.includes( "All")) {
+      console.log(true)
+      if (levelOptions === null) {
         challenges = await challenge.find({});
       } else {
-        challenges = await challenge.find({ level });
-      }
-    } else {
-      if (level === null) {
-        challenges = await challenge.find({ status });
-      } else {
-        challenges = await challenge.find({ level, status });
+        challenges= await challenge.find({
+          level: { $in: levelOptions }
+        })
       }
     }
-
+    else{
+      let statusFilter = { status: { $in: statusOptions } };
+      if(levelOptions===null){
+        challenges= await challenge.find(statusFilter)
+      }
+      else{
+      let levelFilter = { level: { $in: levelOptions } };
+      console.log(statusFilter, levelFilter)
+      const filter = {
+        ...statusFilter,
+        ...levelFilter,
+      };
+      challenges= await challenge.find(filter);
+      }
+    }
     if (!challenges) {
       return NextResponse.json(
         { error: "No challenges match the filters." },
