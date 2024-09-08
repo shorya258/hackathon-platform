@@ -17,6 +17,7 @@ import {
   Popover,
   PopoverPaper,
 } from "@mui/material";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -24,21 +25,27 @@ const ExploreChallenges = () => {
   const [challenges, setChallenges] = useState([]);
   const [statusFilters, setStatusFilters] = useState([]);
   const [levelFilters, setLevelFilters] = useState([]);
+  const statusOptions = ["All", "active", "upcoming", "past"];
+  const levelOptions = ["easy", "Medium", "Hard"];
   const [anchorEl, setAnchorEl] = useState(null);
-  // Status options
-  const statusOptions = ["All", "Active", "Upcoming", "Past"];
-  // Level options
-  const levelOptions = ["Easy", "Medium", "Hard"];
+  const [showExpandIcon, toggleShowExpandIcon] = useState(true);
 
-  // Handle change for Status filters
+  // Handle opening and closing of popover
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+    toggleShowExpandIcon(false);
+    document.body.style.overflow = 'hidden';
+    document.body.style.paddingRight = '0px'; 
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+    toggleShowExpandIcon(true);
+    document.body.style.overflow = 'auto';
+    document.body.style.paddingRight = ''; 
   };
 
+  // Determine if the popover is open
   const open = Boolean(anchorEl);
   const id = open ? "filter-popover" : undefined;
 
@@ -78,8 +85,8 @@ const ExploreChallenges = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        status: status,
-        level: level,
+        statusOptions: statusOptions,
+        levelOptions: levelOptions,
       }),
     });
     const json = await response.json();
@@ -98,13 +105,43 @@ const ExploreChallenges = () => {
   };
 
   useEffect(() => {
-    getChallenges("All", null);
-  }, []);
+    if (statusFilters.length === 0 || statusFilters.includes("All")) {
+      if (levelFilters.length === 0) {
+        getChallenges("All", null);
+      } else {
+        console.log(levelFilters);
+        getChallenges("All", levelFilters);
+      }
+    } else {
+      if (levelFilters.length === 0) {
+        console.log(statusFilters);
+        getChallenges(statusFilters, null);
+      } else {
+        console.log(statusFilters, levelFilters);
+
+        getChallenges(statusFilters, levelFilters);
+      }
+    }
+  }, [statusFilters, levelFilters]);
+
+  const handleRemoveItem = (item, arrayName) => {
+    console.log("handle remove item called");
+    if (arrayName === "status") {
+      setStatusFilters((statusFilters) =>
+        statusFilters.filter((i) => i !== item)
+      );
+    } else {
+      setLevelFilters((statusFilters) =>
+        statusFilters.filter((i) => i !== item)
+      );
+    }
+  };
 
   return (
     <Box
       sx={{
         width: "100%",
+        p:0
       }}
     >
       <ToastContainer />
@@ -116,7 +153,6 @@ const ExploreChallenges = () => {
           color: "white",
           width: "100%",
           p: 4,
-          zIndex: 0,
         }}
       >
         <Typography
@@ -146,9 +182,12 @@ const ExploreChallenges = () => {
             <Box
               sx={{
                 backgroundColor: "white",
+                display:"flex",
+                flexDirection:"row",
                 borderRadius: "12px",
                 width: "30%",
-                height: "30px",
+                height: "40px",
+                alignItems:"center"
               }}
             >
               {/* <SearchIcon */}
@@ -166,17 +205,33 @@ const ExploreChallenges = () => {
               </Typography>
             </Box>
 
-            <Box>
-              {/* Button to trigger the dropdown */}
-              <Button
-                sx={{ backgroundColor: "white", color: "black", mx: 4, px: 4 }}
-                onClick={handleClick}
-              >
-                Filter <ExpandMoreIcon />
+            <div>
+              {open && (
+                <div
+                  style={{
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    zIndex: 1,
+                  }}
+                  onClick={handleClose}
+                ></div>
+              )}
+              <Button sx={{backgroundColor:"white", color:"black"}} onClick={handleClick}>
+                Filter
+                {showExpandIcon && <ExpandMoreIcon />}
+                {!showExpandIcon && <ExpandLessIcon />}
               </Button>
 
               {/* Popover that acts like a dropdown modal */}
-              <PopoverPaper
+              <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
                 anchorOrigin={{
                   vertical: "bottom",
                   horizontal: "left",
@@ -186,7 +241,8 @@ const ExploreChallenges = () => {
                   horizontal: "left",
                 }}
               >
-                <div style={{ padding: "20px", width: "250px" }}>
+                <div style={{ padding: "20px", width: "300px" }}>
+                  {/* Status Section */}
                   <Typography>Status</Typography>
                   <FormGroup>
                     {statusOptions.map((status) => (
@@ -206,6 +262,7 @@ const ExploreChallenges = () => {
 
                   <Divider style={{ margin: "10px 0" }} />
 
+                  {/* Level Section */}
                   <Typography>Level</Typography>
                   <FormGroup>
                     {levelOptions.map((level) => (
@@ -223,8 +280,8 @@ const ExploreChallenges = () => {
                     ))}
                   </FormGroup>
                 </div>
-              </PopoverPaper>
-            </Box>
+              </Popover>
+            </div>
           </Box>
 
           <Box sx={{}}>
@@ -250,6 +307,7 @@ const ExploreChallenges = () => {
                     alt={"cross icon"}
                     height={20}
                     width={20}
+                    onClick={() => handleRemoveItem(filterItem, "status")}
                   />
                 </Typography>
               );
@@ -276,6 +334,7 @@ const ExploreChallenges = () => {
                     alt={"cross icon"}
                     height={20}
                     width={20}
+                    onClick={() => handleRemoveItem(filterItem, "level")}
                   />
                 </Typography>
               );

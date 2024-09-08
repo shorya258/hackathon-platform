@@ -1,5 +1,6 @@
+"use client"
 import { Box, Button } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 const ChallengeDetails = () => {
   const router = useRouter();
@@ -10,11 +11,11 @@ const ChallengeDetails = () => {
     <Box>
       <Button
         onClick={() => router.push(`/ChallengeForm?requestId=${challengeId}`)}
-        variant="outlined"
+        variant="outlined" sx={{bgcolor:"green", color:"white" }}
       >
         Edit
       </Button>
-      <Button>Delete</Button>
+      <Button sx={{bgcolor:"red", color:"white" }} >Delete</Button>
     </Box>
   );
 };
