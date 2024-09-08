@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { shadows } from "@mui/system";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
+import dayjs from "dayjs";
 const ChallengeDetails = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -19,6 +20,37 @@ const ChallengeDetails = () => {
     image: "",
     status: "",
   });
+  const handleDateFormat = (date) => {
+    const formattedDate = dayjs(date).format("YYYY-MM-DD");
+    console.log("handle date format called", formattedDate)
+    const [year, month, day] = formattedDate.split("-");
+
+    // Create an array of month names to map the month number
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    // Convert the month to the full name and format the result array
+    const dateArr = [
+      parseInt(year.slice(2)),
+      monthNames[parseInt(month) - 1],
+      parseInt(day),
+    ];
+    const result =
+    dateArr[2].toString() + " " + dateArr[1].toString() + " '" + dateArr[0].toString();
+    return result;
+  };
   const getChallengeById = async () => {
     if (!challengeId) {
       return;
@@ -47,7 +79,35 @@ const ChallengeDetails = () => {
     }
   };
   const handleDeleteChallenge=async()=>{
-    
+    console.log("delete challenge called")
+    if (!challengeId) {
+      console.log("challenge id not found")
+      return;
+    }
+    const response = await fetch(`/api/delete-single-challenge`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        challengeId
+      }),
+    });
+    const responseJson = await response.json();
+    console.log(responseJson)
+    const statusCode = response.status;
+
+    //console.log(json.status);
+    if (statusCode === 201) {
+      console.log("success");
+      toast.success("Deleted the challenge successfully!")
+      router.push("/")
+      setChallengeDetails(responseJson.foundChallenge);
+    } else if (statusCode === 400) {
+      toast.error(json.error);
+    } else {
+      toast.error("Failed to add the item!");
+    }
   }
   useEffect(() => {
     getChallengeById();
@@ -66,25 +126,25 @@ const ChallengeDetails = () => {
         }}
       >
         <Box
-          sx={{ backgroundColor: "rgba(255, 206, 92, 1) ", display: "inline" }}
+          sx={{ backgroundColor: "rgba(255, 206, 92, 1) ", display: "inline-flex ", justifyContent:"flex-start", alignItems:"center" , color:"black", p:1, borderRadius:"12px" }}
         >
           <Image src={"/media/clock.svg"} alt="clock" height={15} width={15} />
-          {challengeDetails?.status === "upcoming" && (
-            <Typography>
-              Starts at
-              {new Date(challengeDetails?.startDate).toString()} 9pm IST
+          {challengeDetails?.status.toLowerCase() === "upcoming" && (
+            <Typography sx={{display: "inline"}} >
+              &nbsp; Starts at &nbsp;
+              {handleDateFormat(challengeDetails?.startDate)} 9:00 PM IST Indian Standard Time
             </Typography>
           )}
-          {challengeDetails?.status === "active" && (
-            <Typography>
-              Ends on
-              {challengeDetails?.endDate.toString()} 9pm IST
+          {challengeDetails?.status.toLowerCase() === "active" && (
+            <Typography sx={{display: "inline"}}>
+              &nbsp; Ends on &nbsp;
+              {handleDateFormat(challengeDetails?.endDate)} &nbsp;9:00 PM
             </Typography>
           )}
-          {challengeDetails?.status === "ended" && (
-            <Typography>
-              Ended at
-              {challengeDetails?.endDate.toString()} 9pm IST
+          {challengeDetails?.status.toLowerCase() === "past" && (
+            <Typography sx={{display: "inline"}}>
+              &nbsp; Ended on &nbsp;
+              {handleDateFormat(challengeDetails?.endDate)} 9:00 PM IST Indian Standard Time
             </Typography>
           )}
         </Box>
@@ -104,7 +164,7 @@ const ChallengeDetails = () => {
             borderRadius: 2,
           }}
         >
-          {challengeDetails?.level === "easy" && (
+          {challengeDetails?.level.toLowerCase()  === "easy" && (
             <Image
               src={"/media/easy-level.svg"}
               alt={"easy-lvl"}
@@ -112,7 +172,7 @@ const ChallengeDetails = () => {
               width={15}
             />
           )}
-          {challengeDetails?.level === "Medium" && (
+          {challengeDetails?.level.toLowerCase()  === "medium" && (
             <Image
               src={"/media/medium-level.svg"}
               alt={"medium-lvl"}
@@ -120,7 +180,7 @@ const ChallengeDetails = () => {
               width={15}
             />
           )}
-          {challengeDetails?.level === "hard" && (
+          {challengeDetails?.level.toLowerCase() === "hard" && (
             <Image
               src={"/media/hard-level.svg"}
               alt={"hard-lvl"}
@@ -173,7 +233,7 @@ const ChallengeDetails = () => {
           <Button
             variant="outlined"
             sx={{ borderColor: "red", color: "red", mx: 1 }}
-            onClick={()=>(handleDeleteChallenge)}
+            onClick={handleDeleteChallenge}
           >
             Delete
           </Button>

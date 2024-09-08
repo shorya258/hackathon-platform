@@ -28,7 +28,7 @@ const ExploreChallenges = () => {
   const [statusFilters, setStatusFilters] = useState([]);
   const [levelFilters, setLevelFilters] = useState([]);
   const statusOptions = ["All", "active", "upcoming", "past"];
-  const levelOptions = ["easy", "Medium", "Hard"];
+  const levelOptions = ["Easy", "Medium", "Hard"];
   const [anchorEl, setAnchorEl] = useState(null);
   const [showExpandIcon, toggleShowExpandIcon] = useState(true);
   const [searchedTerm, setSearchedTerm] = useState("");
@@ -70,16 +70,6 @@ const ExploreChallenges = () => {
         ? prev.filter((item) => item !== value)
         : [...prev, value]
     );
-  };
-
-  const challengeDetails = {
-    challengeName: "Data Sprint 72 - Butterfly Identification",
-    challengeImg: "/media/challenge-card.svg",
-    challengeDescription:
-      "Identify the class to which each butterfly belongs to",
-    level: "easy",
-    startDate: "2024-09-09",
-    endDate: "2025-04-04",
   };
   const getChallenges = async (statusOptions, levelOptions) => {
     const response = await fetch(`/api/get-challenges`, {

@@ -7,6 +7,8 @@ import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
 import { Box, Button, CardActions } from "@mui/material";
 import Image from "next/image";
+import dayjs from "dayjs";
+
 import { useRouter } from "next/navigation";
 const ChallengeCard = ({ challengeDetails }) => {
   const {
@@ -20,9 +22,38 @@ const ChallengeCard = ({ challengeDetails }) => {
   } = challengeDetails;
   const [status, setStatus] = useState("");
   const [timeLeft, setTimeLeft] = useState({});
-  const router=useRouter();
+  const router = useRouter();
+  const handleDateFormat = (date) => {
+    const formattedDate = dayjs(date).format("YYYY-MM-DD");
+    const [year, month, day] = formattedDate.split("-");
+
+    // Create an array of month names to map the month number
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    // Convert the month to the full name and format the result array
+    const dateArr = [
+      parseInt(year.slice(2)),
+      monthNames[parseInt(month) - 1],
+      parseInt(day),
+    ];
+    const result =
+    dateArr[2].toString() + " " + dateArr[1].toString() + " '" + dateArr[0].toString();
+    return result;
+  };
   useEffect(() => {
-    // Convert startTime and endTime to Date objects
     const start = new Date(startDate);
     const end = new Date(endDate);
 
@@ -83,9 +114,7 @@ const ChallengeCard = ({ challengeDetails }) => {
   };
 
   return (
-    <div
-          onClick={()=>router.push(`/ChallengeDetails?requestId=${_id}`)}
-     >
+    <div onClick={() => router.push(`/ChallengeDetails?requestId=${_id}`)}>
       <Card sx={{ width: 345, m: 4, height: "auto", borderRadius: "14px" }}>
         <CardActionArea>
           <CardMedia
@@ -95,9 +124,11 @@ const ChallengeCard = ({ challengeDetails }) => {
             alt="challenge img"
           />
           <CardContent
-            sx={{
-              // p: 5,
-            }}
+            sx={
+              {
+                // p: 5,
+              }
+            }
           >
             <Typography
               sx={{
@@ -128,7 +159,7 @@ const ChallengeCard = ({ challengeDetails }) => {
                 fontWeight: "bold",
                 fontSize: "20px",
                 mt: 2,
-                textAlign:"center"
+                textAlign: "center",
               }}
             >
               {challengeName}
@@ -141,7 +172,7 @@ const ChallengeCard = ({ challengeDetails }) => {
                   textAlign: "center",
                 }}
               >
-                <Typography sx={{my:2}} >Starting In</Typography>
+                <Typography sx={{ my: 2 }}>Starting In</Typography>
 
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                   <Box
@@ -237,7 +268,7 @@ const ChallengeCard = ({ challengeDetails }) => {
                   textAlign: "center",
                 }}
               >
-                <Typography sx={{my:2}} >Ending In</Typography>
+                <Typography sx={{ my: 2 }}>Ending In</Typography>
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                   <Box
                     sx={{
@@ -324,15 +355,24 @@ const ChallengeCard = ({ challengeDetails }) => {
               </Box>
             )}
             {status === "past" && (
-              <Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  textAlign: "center",
+                }}
+              >
+                <Typography sx={{ my: 2 }}>Ended On</Typography>
                 <Typography
-                 sx={{my:2}} 
+                  sx={{
+                    // width: "50px",
+                    textAlign: "center",
+                    fontWeight: "bold",
+                    fontSize: "24px",
+                  }}
                 >
-                  Ended On
+                  {handleDateFormat(endDate)}
                 </Typography>
-                {/* {startTimer(startDate, endDate)} */}
-                <p>{new Date(endDate).toString()}</p>
-                {/* <Typography> {new Date(endDate).toString()} </Typography> */}
               </Box>
             )}
           </CardContent>
@@ -345,7 +385,7 @@ const ChallengeCard = ({ challengeDetails }) => {
               height: "auto",
               borderRadius: "18px",
             }}
-          // onClick={()=>router.push(`/ChallengeForm?requestId=${_id}`)}
+            // onClick={()=>router.push(`/ChallengeForm?requestId=${_id}`)}
           >
             <Image
               src={"/media/participate-now.svg"}

@@ -12,14 +12,15 @@ export async function DELETE(req) {
         );
       }
       await connectToDatabase();
-      challenge.deleteOne(challengeId)
-      .then(()=>{
-        return NextResponse.json({ message: "Challenge deleted" }, { status: 201 });
-      })
-      .catch((e)=>{
-        return NextResponse.json({ error: e }, { status: 400 });
-      })
-      
+      const deletedChallenge= await challenge.deleteOne({_id:challengeId})
+      console.log(deletedChallenge.deletedCount)
+      if (!deletedChallenge.deletedCount) {
+        return NextResponse.json(
+          { error: "Challenge not found" },
+          { status: 404 }
+        );
+      }
+      return NextResponse.json({ message: "Challenge deleted" }, { status: 201 });
     } catch (error) {
       console.error("Error occurred:", error);
       return NextResponse.json(
