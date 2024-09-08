@@ -100,8 +100,9 @@ const ExploreChallenges = () => {
   const handleSearchBar = (searchedValue) => {
     console.log("searched val", searchedValue);
     setSearchedTerm(searchedValue);
+    titleGotSearched(searchedValue);
   };
-  const titleGotSearched = () => {
+  const titleGotSearched = (searchedTerm) => {
     console.log(searchedTerm);
     if (searchedTerm !== "") {
       const searchedChallenges = challenges.filter((singleChallenge) => {
@@ -214,7 +215,6 @@ const ExploreChallenges = () => {
                 placeholder="Search"
                 onChange={(e) => {
                   handleSearchBar(e.target.value);
-                  titleGotSearched(e.target.value);
                 }}
               />
             </Box>
@@ -362,45 +362,45 @@ const ExploreChallenges = () => {
 
       {/* challenges cards */}
       <Box
-        sx={{
-          backgroundColor: "rgba(0, 49, 69, 1)",
-          p: 4,
-          display: "flex",
-          flexDirection: {
-            sm: "column",
-            md: "row",
-          },
-          flexWrap: "wrap",
-          alignItems: "flex-start",
-          // justifyContent: "center",
-          gap: 2,
-          margin: "auto auto",
-        }}
-      >
-        {filteredChallenges.length === 0 ? (
-          <Box
-            sx={{
-              color: "white",
-              fontSize: "32px",
-              fontWeight: "bold",
-              textAlign: "center",
-            }}
-          >
-            No challenges to display yet!
-          </Box>
-        ) : (
-          <>
-            {filteredChallenges?.map((singleChallengeDetails, key) => {
-              // console.log(first)
-              return (
-                <ChallengeCard
-                  key={key}
-                  challengeDetails={singleChallengeDetails}
-                />
-              );
-            })}
-          </>
-        )}
+      sx={{backgroundColor:"rgba(0, 49, 69, 1)" }}
+       >
+      <Box
+          sx={{
+            display: "grid",
+            width:"90%",
+            gridTemplateColumns:"repeat(3,1fr)",
+            px:4,
+            alignItems:"stretch" ,
+            // backgroundColor:"blue",
+            gap:1,
+            margin: "auto",
+          }}
+        >
+          {filteredChallenges.length === 0 ? (
+            <Box
+              sx={{
+                color: "white",
+                fontSize: "32px",
+                fontWeight: "bold",
+                textAlign: "center",
+              }}
+            >
+              No challenges to display yet!
+            </Box>
+          ) : (
+            <>
+              {filteredChallenges?.map((singleChallengeDetails, key) => {
+                // console.log(first)
+                return (
+                  <ChallengeCard
+                    key={key}
+                    challengeDetails={singleChallengeDetails}
+                  />
+                );
+              })}
+            </>
+          )}
+        </Box>
       </Box>
     </Box>
   );
