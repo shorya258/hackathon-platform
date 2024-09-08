@@ -202,11 +202,15 @@ const ExploreChallenges = () => {
                 width: "30%",
                 height: "40px",
                 alignItems: "center",
+                marginRight : 3
               }}
             >
               <Search
                 sx={{
                   color: "black",
+                  fontSize : '1.1rem',
+                  marginRight : 1,
+                  marginLeft : 3
                 }}
               />
               <Input
@@ -216,6 +220,9 @@ const ExploreChallenges = () => {
                 onChange={(e) => {
                   handleSearchBar(e.target.value);
                 }}
+                sx={{width : "100%"}}
+                InputProps={{ disableUnderline: true }}
+                disableUnderline
               />
             </Box>
 
@@ -235,7 +242,7 @@ const ExploreChallenges = () => {
                 ></div>
               )}
               <Button
-                sx={{ backgroundColor: "white", color: "black" }}
+                sx={{ backgroundColor: "white", color: "black", borderRadius: "12px", height : '100%' }}
                 onClick={handleClick}
               >
                 Filter
