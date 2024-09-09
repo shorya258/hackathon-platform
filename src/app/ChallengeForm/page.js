@@ -101,6 +101,10 @@ const ChallengeForm = () => {
     const start = new Date(challengeDetails.startDate);
     const end = new Date(challengeDetails.endDate);
     const now = new Date();
+    if(end<start){
+      toast.error("Start date should be lesser than end date!");
+      return;
+    }
     if (now < start) {
       oldChallengeDetails.status = "upcoming";
     } else if (now >= start && now <= end) {
@@ -163,6 +167,12 @@ const ChallengeForm = () => {
     editChallenge(challengeDetails);
   };
   async function editChallenge() {
+    const start = new Date(challengeDetails.startDate);
+    const end = new Date(challengeDetails.endDate);
+    if(end<start){
+      toast.error("Start date should be lesser than end date!");
+      return;
+    }
     const response = await fetch(`/api/create-challenge`, {
       method: "PUT",
       headers: {
