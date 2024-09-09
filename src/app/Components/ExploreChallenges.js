@@ -171,6 +171,7 @@ const ExploreChallenges = () => {
             textAlign: "center",
             fontSize: "32px",
             fontWeight: "bold",
+            my : 4
           }}
         >
           Explore Challenges
@@ -189,43 +190,137 @@ const ExploreChallenges = () => {
               display: "flex",
               flexDirection: "row",
               justifyContent: "center",
-              P: 2,
-              m: 3,
+              mt : 4,
+              mb : 2
             }}
           >
             {/* search bar */}
-
             <Box
               sx={{
-                backgroundColor: "white",
                 display: "flex",
-                flexDirection: "row",
-                borderRadius: "12px",
-                width: "30%",
-                height: "40px",
-                alignItems: "center",
-                marginRight: 3,
+                flexDirection: "column",
+                alignItems: "stretch",
+                width: "50%",
+                justifyContent: "flex-start",
               }}
             >
-              <Search
+              <Box
                 sx={{
-                  color: "black",
-                  fontSize: "1.1rem",
-                  marginRight: 1,
-                  marginLeft: 3,
+                  backgroundColor: "white",
+                  display: "flex",
+                  flexDirection: "row",
+                  borderRadius: "12px",
+                  // width: "30%",
+                  height: "40px",
+                  alignItems: "center",
+                  marginRight: 3,
                 }}
-              />
-              <Input
-                type="text"
-                value={searchedTerm}
-                placeholder="Search"
-                onChange={(e) => {
-                  handleSearchBar(e.target.value);
+              >
+                <Search
+                  sx={{
+                    color: "black",
+                    fontSize: "1.1rem",
+                    marginRight: 1,
+                    marginLeft: 3,
+                  }}
+                />
+                <Input
+                  type="text"
+                  value={searchedTerm}
+                  placeholder="Search"
+                  onChange={(e) => {
+                    handleSearchBar(e.target.value);
+                  }}
+                  sx={{ width: "100%" }}
+                  InputProps={{ disableUnderline: true }}
+                  disableUnderline
+                />
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  marginTop: 4,
                 }}
-                sx={{ width: "100%" }}
-                InputProps={{ disableUnderline: true }}
-                disableUnderline
-              />
+              >
+                  {statusFilters?.map((filterItem) => {
+                    {
+                      console.log(filterItem);
+                    }
+                    return (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent : 'center',
+                          borderRadius: 1,
+                          backgroundColor: "rgba(248, 249, 253, 0.49)",
+                          borderRadius: 4,
+                          height : "50%",
+                          px : 3,
+                          py : 2,
+                          mr : 2
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            color: "white",
+                            display: "inline",
+                            mr: 1,
+                            textTransform : 'capitalize'
+                          }}
+                        >
+                          {filterItem}
+                        </Typography>
+                        <Image
+                          src={"/media/cross-icon.svg"}
+                          alt={"cross icon"}
+                          height={15}
+                          width={15}
+                          onClick={() => handleRemoveItem(filterItem, "status")}
+                        />
+                      </Box>
+                    );
+                  })}
+                  {levelFilters?.map((filterItem) => {
+                    {
+                      console.log(filterItem);
+                    }
+                    return (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent : 'center',
+                          borderRadius: 1,
+                          backgroundColor: "rgba(248, 249, 253, 0.49)",
+                          borderRadius: 4,
+                          height : "50%",
+                          px : 3,
+                          py : 2
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            color: "white",
+                            display: "inline",
+                            mr: 1,
+                            textTransform : 'capitalize'
+                          }}
+                        >
+                          {filterItem}
+                        </Typography>
+                        <Image
+                          src={"/media/cross-icon.svg"}
+                          alt={"cross icon"}
+                          height={15}
+                          width={15}
+                          onClick={() => handleRemoveItem(filterItem, "level")}
+                        />
+                      </Box>
+                    );
+                  })}
+              </Box>
             </Box>
 
             <div>
@@ -248,7 +343,8 @@ const ExploreChallenges = () => {
                   backgroundColor: "white",
                   color: "black",
                   borderRadius: "12px",
-                  height: "100%",
+                  height: "40px",
+                  px: 2
                 }}
                 onClick={handleClick}
               >
@@ -315,72 +411,11 @@ const ExploreChallenges = () => {
               </Popover>
             </div>
           </Box>
-
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <Box>
-              {statusFilters?.map((filterItem) => {
-                {
-                  console.log(filterItem);
-                }
-                return (
-                  <Typography
-                    sx={{
-                      borderRadius: 1,
-                      backgroundColor: "rgba(248, 249, 253, 0.49)",
-                      color: "white",
-                      display: "inline",
-                      p: 1,
-                      m: 2,
-                      borderRadius: 2,
-                    }}
-                  >
-                    {filterItem}
-                    <Image
-                      src={"/media/cross-icon.svg"}
-                      alt={"cross icon"}
-                      height={20}
-                      width={20}
-                      onClick={() => handleRemoveItem(filterItem, "status")}
-                    />
-                  </Typography>
-                );
-              })}
-            </Box>
-            <Box>
-              {levelFilters?.map((filterItem) => {
-                {
-                  console.log(filterItem);
-                }
-                return (
-                  <Typography
-                    sx={{
-                      borderRadius: 1,
-                      backgroundColor: "rgba(248, 249, 253, 0.49)",
-                      color: "white",
-                      display: "inline",
-                      p: 1,
-                      m: 2,
-                      borderRadius: 2,
-                    }}
-                  >
-                    {filterItem}
-                    <Image
-                      src={"/media/cross-icon.svg"}
-                      alt={"cross icon"}
-                      height={20}
-                      width={20}
-                      onClick={() => handleRemoveItem(filterItem, "level")}
-                    />
-                  </Typography>
-                );
-              })}
-            </Box>
-          </Box>
         </Box>
       </Box>
 
       {/* challenges cards */}
-      <Box sx={{ backgroundColor: "rgba(0, 49, 69, 1)", pb:10 }}>
+      <Box sx={{ backgroundColor: "rgba(0, 49, 69, 1)", pb: 10 }}>
         <Box
           sx={{
             display: "grid",
