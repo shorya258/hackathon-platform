@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import FormLabel from "@mui/material/FormLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { Box, Button, TextField, Typography } from "@mui/material";
@@ -16,10 +16,12 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useRouter,useSearchParams } from "next/navigation";
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { useRouter, useSearchParams } from "next/navigation";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { ArrowForward, Image } from "@mui/icons-material";
 const ChallengeForm = () => {
   const router = useRouter();
+  const inputRef = useRef(null);
   const [image, setImage] = useState(null);
   const searchParams = useSearchParams();
   const [challengeId, setChallengeId] = useState(searchParams.get("requestId"));
@@ -34,18 +36,19 @@ const ChallengeForm = () => {
   });
   useEffect(() => {
     getChallengeById();
-  }, [])
+  }, []);
+
   const getChallengeById = async () => {
-    if(!challengeId) {
+    if (!challengeId) {
       return;
     }
     const response = await fetch(`/api/get-single-challenge`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-      },      
+      },
       body: JSON.stringify({
-        challengeId
+        challengeId,
       }),
     });
     const responseJson = await response.json();
@@ -54,13 +57,16 @@ const ChallengeForm = () => {
     //console.log(json.status);
     if (statusCode === 201) {
       console.log("success");
-      console.log("SINGLE CHALLENGE" , responseJson);
-      setChallengeDetails(responseJson.foundChallenge)
+      console.log("SINGLE CHALLENGE", responseJson);
+      setChallengeDetails(responseJson.foundChallenge);
     } else if (statusCode === 400) {
       toast.error(json.error);
     } else {
       toast.error("Failed to add the item!");
     }
+  };
+  const handleChangeImageClick = () => {
+    inputRef.current.click();
   };
 
   async function uploadFileToFirebaseStorage(file) {
@@ -80,19 +86,18 @@ const ChallengeForm = () => {
       let oldChallenge = challengeDetails;
       oldChallenge.image = downloadURL;
       setChallengeDetails(oldChallenge);
-      setImage(null);
       console.log("File uploaded and URL saved successfully:", downloadURL);
     } catch (error) {
       console.error("Error uploading file:", error);
     }
   }
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
       console.log("Selected file:", file);
       let value = URL.createObjectURL(file);
+      await handleUpload(file);
       setImage(file);
-      handleUpload(file)
     }
   };
 
@@ -101,7 +106,7 @@ const ChallengeForm = () => {
     const start = new Date(challengeDetails.startDate);
     const end = new Date(challengeDetails.endDate);
     const now = new Date();
-    if(end<start){
+    if (end < start) {
       toast.error("Start date should be lesser than end date!");
       return;
     }
@@ -169,7 +174,7 @@ const ChallengeForm = () => {
   async function editChallenge() {
     const start = new Date(challengeDetails.startDate);
     const end = new Date(challengeDetails.endDate);
-    if(end<start){
+    if (end < start) {
       toast.error("Start date should be lesser than end date!");
       return;
     }
@@ -220,7 +225,7 @@ const ChallengeForm = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <FormLabel htmlFor="challenge-name" required sx={{color : 'black'}}>
+          <FormLabel htmlFor="challenge-name" required sx={{ color: "black" }}>
             Challenge name
           </FormLabel>
           <OutlinedInput
@@ -242,7 +247,7 @@ const ChallengeForm = () => {
           }}
         >
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-            <FormLabel htmlFor="startDate" required sx={{color : 'black'}}>
+            <FormLabel htmlFor="startDate" required sx={{ color: "black" }}>
               Start Date
             </FormLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -262,7 +267,7 @@ const ChallengeForm = () => {
             </LocalizationProvider>
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-            <FormLabel htmlFor="endDate" required sx={{color : 'black'}}>
+            <FormLabel htmlFor="endDate" required sx={{ color: "black" }}>
               End Date
             </FormLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -283,7 +288,11 @@ const ChallengeForm = () => {
           </Box>
         </Box>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <FormLabel htmlFor="challenge-description" required sx={{color : 'black'}}>
+          <FormLabel
+            htmlFor="challenge-description"
+            required
+            sx={{ color: "black" }}
+          >
             Description
           </FormLabel>
           <TextField
@@ -301,30 +310,82 @@ const ChallengeForm = () => {
           />
         </Box>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <FormLabel htmlFor="challenge-description" required sx={{color : 'black'}}>
+          <FormLabel
+            htmlFor="challenge-description"
+            sx={{ color: "black" }}
+          >
             Image
           </FormLabel>
+          {challengeDetails.image != "" && (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "flex-start",
+                backgroundColor: "rgb(248,249,253)",
+                borderRadius: 2,
+                width: "300px",
+                padding: 3,
+                cursor: "pointer",
+              }}
+              onClick={handleChangeImageClick}
+            >
+              <Box
+                component="img"
+                sx={{
+                  width: "100%",
+                  borderRadius: 3,
+                }}
+                src={challengeDetails.image}
+              ></Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 0.5,
+                  marginTop: 3,
+                  marginBottom : 1,
+                  color: "rgb(68,146,76)",
+                }}
+              >
+                <Image sx={{ fontSize: "0.8rem", }} />
+                <Typography sx={{ fontSize: "0.8rem" }}>
+                  Change Image
+                </Typography>
+                <ArrowForward sx={{ fontSize: "0.8rem" }} />
+              </Box>
+            </Box>
+          )}
           <Button
-            variant="contained"
-            component="label"
-            sx={{
-              color: "white",
-              backgroundColor: "grey",
-              "&:hover": {
-                backgroundColor: "cyan",
-              },
-              width : '200px'
-            }}
-          >
-            Upload
-            <input
-              type="file"
-              hidden // Hides the actual file input
-              onChange={handleFileChange} // Handles file selection
-            />
-                      <CloudUploadIcon sx={{marginLeft : 1 , fontSize : "1rem"}}/>
-          </Button>
-
+              variant="contained"
+              component="label"
+              sx={{
+                backgroundColor: "rgb(243,243,243)",
+                "&:hover": {
+                  backgroundColor: "green",
+                  color : "white",
+                },
+                boxShadow : 'none',
+                width: "200px",
+                display : challengeDetails.image != "" ? "none" : "flex",
+                justifyContent : 'center',
+                border : 1,
+                borderColor : "rgb(224,224,224)",
+                color : "rgb(102,102,102)",
+                textTransform : 'capitalize'
+              }}
+              
+            >
+              Upload
+              <input
+                ref={inputRef}
+                type="file"
+                hidden // Hides the actual file input
+                onChange={handleFileChange} // Handles file selection
+              />
+              <CloudUploadIcon sx={{ marginLeft: 1, fontSize: "1rem" }} />
+            </Button>
         </Box>
 
         {/* level */}
@@ -336,7 +397,10 @@ const ChallengeForm = () => {
             gap: 2,
           }}
         >
-          <FormLabel htmlFor="challenge-description" required sx={{color : 'black'}}>
+          <FormLabel
+            htmlFor="challenge-description"
+            sx={{ color: "black" }}
+          >
             Level Type
           </FormLabel>
           <FormControl sx={{ display: "block" }}>
