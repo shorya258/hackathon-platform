@@ -119,6 +119,9 @@ const ChallengeDetails = () => {
       <Box
         sx={{
           backgroundColor: "rgba(0, 49, 69, 1)",
+          display:"flex",
+          flexDirection:"column",
+          justifyContent:"space-evenly" ,
           color: "white",
           height: "50%",
           px: 15,
@@ -126,7 +129,7 @@ const ChallengeDetails = () => {
         }}
       >
         <Box
-          sx={{ backgroundColor: "rgba(255, 206, 92, 1) ", display: "inline-flex ", justifyContent:"flex-start", alignItems:"center" , color:"black", p:1, borderRadius:"12px" }}
+          sx={{ backgroundColor: "rgba(255, 206, 92, 1) ", display: "inline-flex ", justifyContent:"flex-start", alignItems:"center" , color:"black", p:1, borderRadius:"12px",  width: "fit-content", }}
         >
           <Image src={"/media/clock.svg"} alt="clock" height={15} width={15} />
           {challengeDetails?.status.toLowerCase() === "upcoming" && (
@@ -149,11 +152,11 @@ const ChallengeDetails = () => {
           )}
         </Box>
 
-        <Typography sx={{ fontSize: "32px", fontWeight: "bold" }}>
+        <Typography sx={{ fontSize: "32px", fontWeight: "bold",  width: "fit-content" }}>
           {challengeDetails?.challengeName}
         </Typography>
 
-        <Typography>{challengeDetails?.challengeDescription}</Typography>
+        <Typography sx={{ width: "fit-content",}} >{challengeDetails?.challengeDescription}</Typography>
         <Typography
           sx={{
             fontSize: "18px",
@@ -161,6 +164,7 @@ const ChallengeDetails = () => {
             color: "black",
             display: "inline",
             p: 1,
+            width: "fit-content",
             borderRadius: 2,
           }}
         >
@@ -188,7 +192,7 @@ const ChallengeDetails = () => {
               width={15}
             />
           )}
-          {challengeDetails?.level}
+          &nbsp; {challengeDetails?.level}
         </Typography>
       </Box>
       <Box
