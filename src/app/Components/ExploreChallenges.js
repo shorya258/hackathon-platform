@@ -153,7 +153,6 @@ const ExploreChallenges = () => {
     <Box
       sx={{
         width: "100%",
-        p: 0,
       }}
     >
       <ToastContainer />
@@ -182,7 +181,7 @@ const ExploreChallenges = () => {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            alignItems:"stretch"
+            alignItems: "stretch",
           }}
         >
           <Box
@@ -194,7 +193,7 @@ const ExploreChallenges = () => {
               m: 3,
             }}
           >
-          {/* search bar */}
+            {/* search bar */}
 
             <Box
               sx={{
@@ -205,15 +204,15 @@ const ExploreChallenges = () => {
                 width: "30%",
                 height: "40px",
                 alignItems: "center",
-                marginRight : 3
+                marginRight: 3,
               }}
             >
               <Search
                 sx={{
                   color: "black",
-                  fontSize : '1.1rem',
-                  marginRight : 1,
-                  marginLeft : 3
+                  fontSize: "1.1rem",
+                  marginRight: 1,
+                  marginLeft: 3,
                 }}
               />
               <Input
@@ -223,7 +222,7 @@ const ExploreChallenges = () => {
                 onChange={(e) => {
                   handleSearchBar(e.target.value);
                 }}
-                sx={{width : "100%"}}
+                sx={{ width: "100%" }}
                 InputProps={{ disableUnderline: true }}
                 disableUnderline
               />
@@ -245,7 +244,12 @@ const ExploreChallenges = () => {
                 ></div>
               )}
               <Button
-                sx={{ backgroundColor: "white", color: "black", borderRadius: "12px", height : '100%' }}
+                sx={{
+                  backgroundColor: "white",
+                  color: "black",
+                  borderRadius: "12px",
+                  height: "100%",
+                }}
                 onClick={handleClick}
               >
                 Filter
@@ -310,86 +314,82 @@ const ExploreChallenges = () => {
                 </div>
               </Popover>
             </div>
-
           </Box>
 
-          <Box sx={{display:"flex", justifyContent:"center" }}>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Box>
-            {statusFilters?.map((filterItem) => {
-              {
-                console.log(filterItem);
-              }
-              return (
-                <Typography
-                  sx={{
-                    borderRadius: 1,
-                    backgroundColor: "rgba(248, 249, 253, 0.49)",
-                    color: "white",
-                    display: "inline",
-                    p: 1,
-                    m: 2,
-                    borderRadius: 2,
-                  }}
-                >
-                  {filterItem}
-                  <Image
-                    src={"/media/cross-icon.svg"}
-                    alt={"cross icon"}
-                    height={20}
-                    width={20}
-                    onClick={() => handleRemoveItem(filterItem, "status")}
-                  />
-                </Typography>
-              );
-            })}
+              {statusFilters?.map((filterItem) => {
+                {
+                  console.log(filterItem);
+                }
+                return (
+                  <Typography
+                    sx={{
+                      borderRadius: 1,
+                      backgroundColor: "rgba(248, 249, 253, 0.49)",
+                      color: "white",
+                      display: "inline",
+                      p: 1,
+                      m: 2,
+                      borderRadius: 2,
+                    }}
+                  >
+                    {filterItem}
+                    <Image
+                      src={"/media/cross-icon.svg"}
+                      alt={"cross icon"}
+                      height={20}
+                      width={20}
+                      onClick={() => handleRemoveItem(filterItem, "status")}
+                    />
+                  </Typography>
+                );
+              })}
             </Box>
             <Box>
-            {levelFilters?.map((filterItem) => {
-              {
-                console.log(filterItem);
-              }
-              return (
-                <Typography
-                  sx={{
-                    borderRadius: 1,
-                    backgroundColor: "rgba(248, 249, 253, 0.49)",
-                    color: "white",
-                    display: "inline",
-                    p: 1,
-                    m: 2,
-                    borderRadius: 2,
-                  }}
-                >
-                  {filterItem}
-                  <Image
-                    src={"/media/cross-icon.svg"}
-                    alt={"cross icon"}
-                    height={20}
-                    width={20}
-                    onClick={() => handleRemoveItem(filterItem, "level")}
-                  />
-                </Typography>
-              );
-            })}
+              {levelFilters?.map((filterItem) => {
+                {
+                  console.log(filterItem);
+                }
+                return (
+                  <Typography
+                    sx={{
+                      borderRadius: 1,
+                      backgroundColor: "rgba(248, 249, 253, 0.49)",
+                      color: "white",
+                      display: "inline",
+                      p: 1,
+                      m: 2,
+                      borderRadius: 2,
+                    }}
+                  >
+                    {filterItem}
+                    <Image
+                      src={"/media/cross-icon.svg"}
+                      alt={"cross icon"}
+                      height={20}
+                      width={20}
+                      onClick={() => handleRemoveItem(filterItem, "level")}
+                    />
+                  </Typography>
+                );
+              })}
             </Box>
-            
           </Box>
         </Box>
       </Box>
 
       {/* challenges cards */}
-      <Box
-      sx={{backgroundColor:"rgba(0, 49, 69, 1)" }}
-       >
-      <Box
+      <Box sx={{ backgroundColor: "rgba(0, 49, 69, 1)", pb:10 }}>
+        <Box
           sx={{
             display: "grid",
-            width:"90%",
-            gridTemplateColumns:"repeat(3,1fr)",
-            px:4,
-            alignItems:"stretch" ,
+            width: "90%",
+            gridTemplateColumns: "repeat(3,1fr)",
+            px: 4,
+            alignItems: "stretch",
             // backgroundColor:"blue",
-            gap:1,
+            gap: 1,
             margin: "auto",
           }}
         >

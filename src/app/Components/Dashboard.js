@@ -53,7 +53,8 @@ const Dashboard = () => {
               textAlign: "left",
               whiteSpace: "normal", // Ensure text wraps within the container
               wordBreak: "break-word", // Break long words if necessary
-              width: "100%",
+              width: "80%",
+              letterSpacing:"1px"
             }}
           >
             AI Challenges at DPhi simulate real-world problems. It is a great
@@ -233,7 +234,8 @@ const Dashboard = () => {
             display: "flex",
             flexDirection: "row",
             flexWrap: "wrap",
-            justifyContent:"center"
+            justifyContent:"center",
+            mb:6
           }}
         >
           <DashboardCards
