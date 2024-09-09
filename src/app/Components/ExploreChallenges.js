@@ -182,6 +182,7 @@ const ExploreChallenges = () => {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
+            alignItems:"stretch"
           }}
         >
           <Box
@@ -193,6 +194,8 @@ const ExploreChallenges = () => {
               m: 3,
             }}
           >
+          {/* search bar */}
+
             <Box
               sx={{
                 backgroundColor: "white",
@@ -307,9 +310,11 @@ const ExploreChallenges = () => {
                 </div>
               </Popover>
             </div>
+
           </Box>
 
-          <Box sx={{}}>
+          <Box sx={{display:"flex", justifyContent:"center" }}>
+            <Box>
             {statusFilters?.map((filterItem) => {
               {
                 console.log(filterItem);
@@ -337,6 +342,8 @@ const ExploreChallenges = () => {
                 </Typography>
               );
             })}
+            </Box>
+            <Box>
             {levelFilters?.map((filterItem) => {
               {
                 console.log(filterItem);
@@ -364,6 +371,8 @@ const ExploreChallenges = () => {
                 </Typography>
               );
             })}
+            </Box>
+            
           </Box>
         </Box>
       </Box>
